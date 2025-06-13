@@ -3,8 +3,9 @@
 /*
  * Pipeline parameters
  */
-params.indir  = "${projectDir}/data/"
-params.outdir = "results"
+params.indir   = "${projectDir}/data/"
+params.outdir  = "results"
+params.outfile = "seqkit_stats_output.txt"
 
 /*
  * Calculate Seqkit statistics
@@ -18,11 +19,11 @@ process SEQKIT_STATS {
         path input
 
     output:
-        path 'seqkit_stats_output.txt'
+        path params.outfile
 
     script:
     """
-    seqkit stats $input > seqkit_stats_output.txt
+    seqkit stats $input > $params.outfile
     """
 }
 

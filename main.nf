@@ -3,8 +3,6 @@
 /*
  * Pipeline parameters
  */
-
-// Primary input
 params.indir  = "${projectDir}/data/"
 params.outdir = "results"
 

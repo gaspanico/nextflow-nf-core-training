@@ -1,21 +1,14 @@
 #!/usr/bin/env nextflow
 
-/*
- * Use echo to print 'Hello World!' to a file
- */
-process sayHello {
-
-    output:
-        path 'output.txt'
-
-    script:
-    """
-    echo 'Hello World!' > output.txt
-    """
-}
+include { SEQKIT_STATS } from './modules/seqkit/stats/main.nf'
 
 workflow {
 
-    // emit a greeting
-    sayHello()
+    // Create input channel (single file via CLI parameter)
+    inputs_ch = Channel.fromPath(params.indir + '/*')
+                       .filter(~/.*\.(fa|fq|fastq|fq\.gz|fastq\.gz)$/)
+                       .collect()
+
+    // Calculate Seqkit statistics
+    SEQKIT_STATS(inputs_ch)
 }

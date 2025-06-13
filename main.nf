@@ -5,8 +5,8 @@
  */
 
 // Primary input
-params.reads_fastq = "${projectDir}/data/reads_NA12878_R1.fastq"
-params.outdir    = "results"
+params.indir  = "${projectDir}/data/"
+params.outdir = "results"
 
 /*
  * Calculate Seqkit statistics
@@ -18,22 +18,24 @@ process SEQKIT_STATS {
     publishDir params.outdir, mode: 'symlink'
 
     input:
-        path input_fastq
+        path input
 
     output:
         path 'seqkit_stats_output.txt'
 
     script:
     """
-    seqkit stats '$input_fastq' > seqkit_stats_output.txt
+    seqkit stats $input > seqkit_stats_output.txt
     """
 }
 
 workflow {
 
     // Create input channel (single file via CLI parameter)
-    fastq_ch = Channel.fromPath(params.reads_fastq)
+    inputs_ch = Channel.fromPath(params.indir + '/*')
+                       .filter(~/.*\.(fa|fq|fastq|fq\.gz|fastq\.gz)$/)
+                       .collect()
 
     // Calculate Seqkit statistics
-    SEQKIT_STATS(fastq_ch)
+    SEQKIT_STATS(inputs_ch)
 }

@@ -12,10 +12,10 @@ process SEQKIT_STATS {
         path input
 
     output:
-        path params.outfile
+        path '*_seqkit-stats.tsv'
 
     script:
     """
-    seqkit stats $input > $params.outfile
+    seqkit stats ${ input } -T > ${ input }_seqkit-stats.tsv
     """
 }
